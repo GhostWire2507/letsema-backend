@@ -62,7 +62,7 @@ Update `.env` with your configuration:
 ```env
 PORT=4000
 NODE_ENV=development
-MONGO_URI=mongodb://localhost:27017/letsema
+MONGO_URI=your_mongodb_connection_string_here
 JWT_SECRET=your_super_secret_jwt_key_here
 JWT_REFRESH_SECRET=your_super_secret_refresh_key_here
 CORS_ORIGIN=http://localhost:5173
@@ -313,7 +313,7 @@ docker-compose up -d
 ```env
 NODE_ENV=production
 PORT=4000
-MONGO_URI=mongodb+srv://user:pass@cluster.mongodb.net/letsema
+MONGO_URI=your_production_mongodb_uri
 JWT_SECRET=your_production_jwt_secret
 JWT_REFRESH_SECRET=your_production_refresh_secret
 CORS_ORIGIN=https://your-frontend-domain.com
@@ -342,7 +342,7 @@ railway up
 # Install Heroku CLI and login
 heroku create letsema-backend
 heroku config:set NODE_ENV=production
-heroku config:set MONGO_URI=your_mongo_uri
+heroku config:set MONGO_URI=your_production_mongo_uri
 git push heroku main
 ```
 
