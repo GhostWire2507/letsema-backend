@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # MongoDB service
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: letsema
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - letsema-network
+
+  # Backend service
+  backend:
+    build: .
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - PORT=4000
+      - MONGO_URI=mongodb://root:example@mongo:27017/letsema?authSource=admin
+      - JWT_SECRET=your_super_secret_jwt_key_here_make_it_long_and_random
+      - JWT_REFRESH_SECRET=your_super_secret_refresh_key_here_make_it_different
+      - CORS_ORIGIN=http://localhost:5173
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongo
+    volumes:
+      - ./logs:/app/logs
+      - ./uploads:/app/uploads
+    networks:
+      - letsema-network
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    networks:
+      - letsema-network
+
+volumes:
+  mongodata:
+  redisdata:
+
+networks:
+  letsema-network:
+    driver: bridge
